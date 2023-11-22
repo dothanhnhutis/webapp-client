@@ -31,10 +31,10 @@ class HttpExternal {
   constructor() {
     this.instance = axios.create({
       baseURL: SERVER_URL,
-      withCredentials: true,
       timeout: 10000,
       headers: {
         Accept: "application/json",
+        "Content-Type": "application/json",
       },
       httpsAgent: agent,
     });

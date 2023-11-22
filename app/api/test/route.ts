@@ -1,44 +1,36 @@
+import { getCookie } from "@/lib/action";
 import { httpExternal } from "@/lib/http";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+
+// export async function GET(req: NextRequest) {
+//   try {
+//     const { data } = await httpExternal.get<{
+//       message: string;
+//     }>("/auth/getcookie", {
+//       headers: getCookie(),
+//     });
+
+//     return NextResponse.json(data, { status: 200 });
+//   } catch (error: any) {
+//     console.log(error);
+//     return NextResponse.json({ ok: "something went wrong" }, { status: 500 });
+//   }
+// }
 
 export async function GET(req: NextRequest) {
   try {
-    console.log(req.headers);
-    const cookieStore = cookies();
-    const token = cookieStore.get("test-cookie");
-    console.log(token);
-    const { data } = await httpExternal.get<{
+    const { data, headers } = await httpExternal.post<{
       message: string;
-    }>("/auth/getcookie", {
-      withCredentials: true,
+    }>("/auth/setcookie");
+
+    return NextResponse.json(data, {
+      status: 200,
       headers: {
-        "Content-type": "application/json",
-        cookie: "test-cookie=wow",
+        "Set-Cookie": headers["set-cookie"]
+          ? headers["set-cookie"].map((c) => c + ",").join()
+          : "",
       },
     });
-    return NextResponse.json(data, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json({ ok: "something went wrong" }, { status: 500 });
-  }
-}
-
-export async function POST(req: NextRequest) {
-  try {
-    console.log(req.headers);
-    //   const cookieStore = cookies();
-    //   const token = cookieStore.get("test-cookie");
-    //   console.log(token);
-    //   const { data } = await httpExternal.get<{
-    //     message: string;
-    //   }>("/auth/getcookie", {
-    //     withCredentials: true,
-    //     headers: {
-    //       "Content-type": "application/json",
-    //       cookie: "test-cookie=wow",
-    //     },
-    //   });
-    return NextResponse.json({ message: "fail" }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ ok: "something went wrong" }, { status: 500 });
   }

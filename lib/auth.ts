@@ -28,16 +28,10 @@ export const authOptions: NextAuthOptions = {
             email: string;
             password: string;
           };
-          const { data, headers } = await http.post<AuthRes>(
-            "test",
-            {
-              email,
-              password,
-            },
-            {
-              withCredentials: true,
-            }
-          );
+          const { data, headers } = await http.post<AuthRes>("test", {
+            email,
+            password,
+          });
           const cookieStore = cookies();
 
           cookieStore.set("test-cookie", "123");
